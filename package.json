@@ -8,6 +8,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "firebase": "^10.14.0",
+    "firebaseui": "^6.1.0",
     "postcss": "^8.4.47",
     "postcss-loader": "^8.1.1",
     "react": "^18.0.0",

@@ -1,12 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyADMpEPulIni-1QEZpoULlT3LzFPAvckao',
   authDomain: 'parcial-1-lfs.firebaseapp.com',
@@ -14,10 +9,22 @@ const firebaseConfig = {
   storageBucket: 'parcial-1-lfs.appspot.com',
   messagingSenderId: '711080151934',
   appId: '1:711080151934:web:dd9c5e238b74eb5945c12f',
-  measurementId: 'G-J9YCFK23SN',
 };
 
-// Initialize Firebase
-// const analytics = getAnalytics(app);
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+export const loginEmailPassword = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential; // Si el login es exitoso, devuelve las credenciales del usuario
+  } catch (error) {
+    throw error; // Si hay un error, lo lanzamos para manejarlo en el componente
+  }
+};
+export { auth };
 export const db = getFirestore(app);

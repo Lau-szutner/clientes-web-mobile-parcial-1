@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
-const NavBar = () => {
+const NewPostForm = () => {
   const handleNewPost = async () => {
     try {
       // Aquí defines en qué colección quieres guardar los datos
@@ -26,20 +26,7 @@ const NavBar = () => {
     }
   };
 
-  return (
-    <>
-      <nav className="text-white flex justify-around w-full py-5 bg-zinc-900">
-        <h1 className="text-3xl">Reddot .</h1>
-        <ul className="flex text-xl gap-10 items-center">
-          <li>Home</li>
-          <li>Posteos</li>
-          <li>Foros</li>
-          <button onClick={() => handleNewPost()}>Crear</button>
-        </ul>
-        <div className="bg-blue-500 h-10 w-10"></div>
-      </nav>
-    </>
-  );
+  return <></>;
 };
 
-export default NavBar;
+export default NewPostForm;

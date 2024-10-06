@@ -22,7 +22,6 @@ const PostsList = () => {
         ...doc.data(),
       }));
       {
-        console.log(postsArray);
       }
 
       setPosts(postsArray);
@@ -38,7 +37,7 @@ const PostsList = () => {
 
         const postComments = commentsSnapshot.docs.map((doc) => doc.data());
         {
-          console.log;
+          // console.log;
         }
         // Actualizar el estado de comentarios con los comentarios de cada post
         setComments((prevState) => ({
@@ -60,8 +59,9 @@ const PostsList = () => {
     if (!newComment.trim()) return; // Verifica que el comentario no esté vacío
     try {
       await addDoc(collection(db, `posts/${postId}/comments`), {
+        user: 'lautaro',
         content: newComment,
-        createdAt: new Date(),
+        createdAt: new Date().getTime,
       });
 
       // Después de agregar el comentario, actualizar los comentarios en la UI
@@ -103,7 +103,7 @@ const PostsList = () => {
             <h2 className="text-2xl">{post.title}</h2>
             <div className="flex gap-10 my-5 items-center">
               <p className="text-xl">{post.author}</p>
-              <p>Fecha: {new Date(post.createdAt).toLocaleDateString()}</p>
+              <p>{post.date.toDate().toLocaleString('es-ES')}</p>
             </div>
 
             <div className="bg-black h-20 w-20"></div>
@@ -121,9 +121,15 @@ const PostsList = () => {
               <ul>
                 {comments[post.id]?.length > 0 ? (
                   comments[post.id].map((comment, index) => (
-                    <li key={index} className="my-2">
-                      {comment.content} -{' '}
-                      {new Date(comment.createdAt.toDate()).toLocaleString()}
+                    <li key={index} className="bg-zinc-900 p-2 rounded-md my-2">
+                      <div className="flex">
+                        <div className="bg-blue-500 h-10 w-10 mr-5 rounded-full"></div>
+                        {comment.user} - {''}
+                        {new Date(comment.createdAt.toDate()).toLocaleString(
+                          'es-ES'
+                        )}
+                      </div>
+                      <div className="">{comment.content}</div>
                     </li>
                   ))
                 ) : (

@@ -5,8 +5,8 @@ module.exports = {
   mode: 'development',
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
     clean: true, // Limpia el directorio de salida en cada compilación
   },
   module: {
