@@ -1,0 +1,41 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Logs
+logs
+*.log
+logs/*.log
+
+# Build output
+dist/
+build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.swp
+
+# Environment variables
+.env
+
+# Coverage directory used by testing frameworks
+coverage/
+
+# Ignore images or assets (optional)
+public/assets/*
+!public/assets/*.svg # Except for SVGs, for example
+
+# Ignore compiled files (if using TypeScript)
+*.tsbuildinfo

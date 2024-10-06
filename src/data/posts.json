@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Aprendiendo React",
+    "content": "React es una biblioteca de JavaScript para construir interfaces de usuario. En este post, exploraré los conceptos básicos de React.",
+    "author": "Catalina Lara",
+    "createdAt": "2024-10-01T10:00:00Z",
+    "likes": 15
+  },
+  {
+    "id": 2,
+    "title": "Consejos para usar Tailwind CSS",
+    "content": "Tailwind CSS es un framework CSS utility-first. Aquí hay algunos consejos para comenzar a usarlo de manera efectiva.",
+    "author": "Juan Pérez",
+    "createdAt": "2024-10-02T12:30:00Z",
+    "likes": 23
+  },
+  {
+    "id": 3,
+    "title": "Introducción a Node.js",
+    "content": "Node.js es un entorno de ejecución para JavaScript del lado del servidor. En este post, discutiré sus ventajas y cómo configurarlo.",
+    "author": "María López",
+    "createdAt": "2024-10-03T14:00:00Z",
+    "likes": 10
+  },
+  {
+    "id": 4,
+    "title": "Lo mejor de Next.js",
+    "content": "Next.js es un framework de React que permite la renderización del lado del servidor y generación de sitios estáticos. Aquí están mis características favoritas.",
+    "author": "Carlos Gómez",
+    "createdAt": "2024-10-04T09:15:00Z",
+    "likes": 35
+  },
+  {
+    "id": 5,
+    "title": "SEO en aplicaciones web",
+    "content": "El SEO es crucial para la visibilidad de una aplicación web. En este post, compartiré algunas estrategias efectivas.",
+    "author": "Catalina Lara",
+    "createdAt": "2024-10-05T11:45:00Z",
+    "likes": 42
+  }
+]
