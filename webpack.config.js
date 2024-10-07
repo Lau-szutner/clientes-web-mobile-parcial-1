@@ -12,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.jsx?$/, // Regla para manejar archivos JS/JSX
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -24,6 +24,19 @@ module.exports = {
       {
         test: /\.css$/, // Regla para manejar archivos CSS
         use: ['style-loader', 'css-loader', 'postcss-loader'], // Utiliza estos loaders
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i, // Regla para manejar archivos de imagen
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]', // Conserva el nombre y extensión original del archivo
+              outputPath: 'images/', // Carpeta de salida para imágenes
+              esModule: false, // Para evitar conflictos con el manejo de imágenes
+            },
+          },
+        ],
       },
     ],
   },

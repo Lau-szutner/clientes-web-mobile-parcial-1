@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { loginEmailPassword } from '../services/firebase'; // Importamos la función desde firebase.js
 
-const InputForm = ({ userLog }) => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,8 +13,6 @@ const InputForm = ({ userLog }) => {
       const userCredential = await loginEmailPassword(email, password);
 
       console.log('Logged in:', userCredential.user); // Usuario logueado exitosamente
-
-      userLog(); // Llamamos a userLog solo si es una función
     } catch (err) {
       setError(err.message); // Manejo del error en la UI
       console.error('Error during login:', err.message); // Para depuración
@@ -27,9 +25,9 @@ const InputForm = ({ userLog }) => {
         className="grid bg-gray-200 p-10 rounded-xl w-6/12 gap-5 h-fit"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-4xl text-center">Crear usuario</h1>
+        <h1 className="text-4xl text-center"> Iniciar sesion</h1>
         <label htmlFor="email" className="text-xl">
-          Ingrese su email
+          Email
         </label>
         <input
           type="email"
@@ -67,4 +65,4 @@ const InputForm = ({ userLog }) => {
   );
 };
 
-export default InputForm;
+export default LoginForm;

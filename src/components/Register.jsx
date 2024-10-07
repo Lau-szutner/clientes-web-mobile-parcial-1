@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
-import { auth } from '../services/firebase'; // Importa la configuración de Firebase
+import { collection, addDoc } from 'firebase/firestore'; // Asegúrate de importar addDoc
+import { db, auth } from '../services/firebase'; // Asegúrate de importar tu configuración de Firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-const Register = ({userRegister, isRegistered}) => {
+const Register = ({ loginFirst }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -11,47 +11,80 @@ const Register = ({userRegister, isRegistered}) => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log('Usuario registrado con éxito!');
-      // Aquí puedes redirigir al usuario o mostrar un mensaje
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-      userRegister(); // Llamamos a userLog solo si es una función
+      const user = userCredential.user;
+
+      console.log('Usuario registrado con éxito!', user.uid);
+
+      // Corregido el nombre de la propiedad a 'email'
+      await addDoc(collection(db, 'users'), {
+        id: user.uid,
+        email: user.email,
+      });
     } catch (err) {
-      setError(err.message); // Manejo de errores
+      // Manejo de errores: mostrar un mensaje más amigable
+      setError(
+        err.code === 'auth/email-already-in-use'
+          ? 'El correo ya está en uso.'
+          : 'Error al registrarse. Intente de nuevo.'
+      );
     }
   };
-  const registered = () =>{
-    isRegistered();
-  }
+
+  const registered = () => {
+    if (typeof isRegistered === 'function') {
+      isRegistered();
+    }
+  };
+
   return (
     <div className="container mx-auto flex justify-center h-full items-center">
       <div className="bg-zinc-200 rounded-xl w-6/12 p-10">
-        <h2 className='text-center text-4xl'>Registro de Usuario</h2>
-        <form onSubmit={handleRegister} className='grid bg-gray-200  rounded-xl  gap-5 h-fit'>
-          <div className='flex flex-col gap-5 '>
-            <label className='text-xl'>Email:</label>
+        <h2 className="text-center text-4xl">Registro de Usuario</h2>
+        <form
+          onSubmit={handleRegister}
+          className="grid bg-gray-200 rounded-xl gap-5 h-fit"
+        >
+          <div className="flex flex-col gap-5">
+            <label className="text-xl">Email:</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder='emailexample@hotmail.com'
-              className='p-2 rounded-md h-fit w-full'
+              placeholder="emailexample@hotmail.com"
+              className="p-2 rounded-md h-fit w-full"
             />
           </div>
-          <div className='flex flex-col gap-5 '>
-            <label className='text-2xl w-3/12'>Contraseña:</label>
+          <div className="flex flex-col gap-5">
+            <label className="text-2xl w-3/12">Contraseña:</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-               className='p-2 rounded-md h-fit w-full'
-               placeholder='ingrese su contraseña'
+              className="p-2 rounded-md h-fit w-full"
+              placeholder="ingrese su contraseña"
             />
           </div>
-          <button type="submit" className='bg-zinc-800 text-white p-3 rounded-xl w-full'>Registrar</button>
-          <button className='bg-amber-600 p-3 rounded-xl w-full' onClick={registered}>Iniciar Sesion</button>
+          <button
+            type="submit"
+            className="bg-zinc-800 text-white p-3 rounded-xl w-full"
+          >
+            Registrar
+          </button>
+          <button
+            type="button" // Cambiado a tipo "button" para evitar submit
+            className="bg-amber-600 p-3 rounded-xl w-full"
+            onClick={loginFirst}
+          >
+            Iniciar Sesion
+          </button>
         </form>
         {error && <p>{error}</p>} {/* Muestra errores */}
       </div>
@@ -60,5 +93,3 @@ const Register = ({userRegister, isRegistered}) => {
 };
 
 export default Register;
-
-

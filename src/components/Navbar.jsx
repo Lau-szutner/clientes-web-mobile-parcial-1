@@ -1,18 +1,13 @@
-// Importa el archivo JSON
-import React from 'react';
-import {
-  collection,
-  getDocs,
-  addDoc,
-  query,
-  orderBy,
-} from 'firebase/firestore';
-import { db } from '../services/firebase';
+import React, { useEffect } from 'react'; // Importa useEffect
+import { collection, addDoc } from 'firebase/firestore';
+import { auth, db } from '../services/firebase';
+import { signOut } from 'firebase/auth';
+import perfil from '../img/fotoperfil.jpg';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const NavBar = () => {
   const handleNewPost = async () => {
     try {
-      // Aquí defines en qué colección quieres guardar los datos
       const newPost = await addDoc(collection(db, 'posts'), {
         author: 'catalina',
         content: 'te amo',
@@ -26,6 +21,30 @@ const NavBar = () => {
     }
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('Usuario logeado:', user);
+        console.log('UID:', user.uid);
+        console.log('Email:', user.email);
+      } else {
+        console.log('No hay usuario logeado');
+      }
+    });
+
+    // Cleanup del suscriptor para evitar fugas de memoria
+    return () => unsubscribe();
+  }, []); // Dependencias vacías, se ejecuta solo al montar el componente
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      console.log('Usuario deslogueado');
+    } catch (error) {
+      console.error('Error al desloguear:', error);
+    }
+  };
+
   return (
     <>
       <nav className="text-white flex justify-around w-full py-5 bg-zinc-900">
@@ -36,7 +55,15 @@ const NavBar = () => {
           <li>Foros</li>
           <button onClick={() => handleNewPost()}>Crear</button>
         </ul>
-        <div className="bg-blue-500 h-10 w-10"></div>
+        <div className="flex gap-5">
+          <img src={perfil} alt="" className="h-10 rounded-full" />
+          <button
+            className="bg-red-500 h-10 w-fit p-2 rounded-md"
+            onClick={() => logout()}
+          >
+            Logout
+          </button>
+        </div>
       </nav>
     </>
   );

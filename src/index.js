@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Home from './Home';
 const App = () => {
   return (
-    <section>
+    <section className=" bg-zinc-800">
       <Home></Home>
     </section>
   );
