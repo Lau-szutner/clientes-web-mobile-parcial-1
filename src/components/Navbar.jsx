@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'; // Importa useEffect
+import React, { useEffect, useState } from 'react'; // Importa useEffect
 import { collection, addDoc } from 'firebase/firestore';
 import { auth, db } from '../services/firebase';
 import { signOut } from 'firebase/auth';
@@ -6,9 +6,31 @@ import perfil from '../img/fotoperfil.jpg';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const NavBar = () => {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        console.log('Usuario logeado:', user);
+        console.log('UID:', user.uid);
+        console.log('Email:', user.email);
+        console.log(user);
+      } else {
+        console.log('No hay usuario logeado');
+      }
+    });
+
+    // Cleanup del suscriptor para evitar fugas de memoria
+    return () => unsubscribe();
+  }, []); // Dependencias vacías, se ejecuta solo al montar el componente
+
   const handleNewPost = async () => {
+    if (!user) {
+      console.error('no hay usuario logeado');
+      return;
+    }
     try {
-      const newPost = await addDoc(collection(db, 'posts'), {
+      const newPost = await addDoc(collection(db, `users/${user.id}/posts`), {
         author: 'catalina',
         content: 'te amo',
         date: new Date(),
@@ -20,21 +42,6 @@ const NavBar = () => {
       console.error('Error al agregar el documento: ', e);
     }
   };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('Usuario logeado:', user);
-        console.log('UID:', user.uid);
-        console.log('Email:', user.email);
-      } else {
-        console.log('No hay usuario logeado');
-      }
-    });
-
-    // Cleanup del suscriptor para evitar fugas de memoria
-    return () => unsubscribe();
-  }, []); // Dependencias vacías, se ejecuta solo al montar el componente
 
   const logout = async () => {
     try {

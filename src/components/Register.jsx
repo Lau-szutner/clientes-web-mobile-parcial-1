@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore'; // Asegúrate de importar addDoc
-import { db, auth } from '../services/firebase'; // Asegúrate de importar tu configuración de Firebase
+import { collection, doc, setDoc, addDoc } from 'firebase/firestore';
+import { db, auth } from '../services/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const Register = ({ loginFirst }) => {
@@ -16,29 +16,26 @@ const Register = ({ loginFirst }) => {
         email,
         password
       );
-
       const user = userCredential.user;
 
       console.log('Usuario registrado con éxito!', user.uid);
 
-      // Corregido el nombre de la propiedad a 'email'
+      // Usa setDoc para establecer el documento con el ID igual a user.uid
       await addDoc(collection(db, 'users'), {
-        id: user.uid,
         email: user.email,
+        id: user.uid,
+        // Agrega otros campos que necesites para gestionar los posteos del usuario
+        // posts: [], // Inicializa un array para los posteos, si es necesario
       });
+
+      // Aquí puedes agregar más lógica, como redirigir al usuario o limpiar el formulario
     } catch (err) {
-      // Manejo de errores: mostrar un mensaje más amigable
+      console.error('Error en el registro:', err);
       setError(
         err.code === 'auth/email-already-in-use'
           ? 'El correo ya está en uso.'
           : 'Error al registrarse. Intente de nuevo.'
       );
-    }
-  };
-
-  const registered = () => {
-    if (typeof isRegistered === 'function') {
-      isRegistered();
     }
   };
 
@@ -79,14 +76,14 @@ const Register = ({ loginFirst }) => {
             Registrar
           </button>
           <button
-            type="button" // Cambiado a tipo "button" para evitar submit
+            type="button"
             className="bg-amber-600 p-3 rounded-xl w-full"
             onClick={loginFirst}
           >
             Iniciar Sesion
           </button>
         </form>
-        {error && <p>{error}</p>} {/* Muestra errores */}
+        {error && <p>{error}</p>}
       </div>
     </div>
   );
