@@ -20,15 +20,14 @@ const Register = ({ loginFirst }) => {
 
       console.log('Usuario registrado con éxito!', user.uid);
 
-      // Usa setDoc para establecer el documento con el ID igual a user.uid
+
       await addDoc(collection(db, 'users'), {
         email: user.email,
         id: user.uid,
-        // Agrega otros campos que necesites para gestionar los posteos del usuario
-        // posts: [], // Inicializa un array para los posteos, si es necesario
+
       });
 
-      // Aquí puedes agregar más lógica, como redirigir al usuario o limpiar el formulario
+
     } catch (err) {
       console.error('Error en el registro:', err);
       setError(

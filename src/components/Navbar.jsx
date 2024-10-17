@@ -4,9 +4,11 @@ import { auth, db } from '../services/firebase';
 import { signOut } from 'firebase/auth';
 import perfil from '../img/fotoperfil.jpg';
 import { onAuthStateChanged } from 'firebase/auth';
+import NewPostForm from './NewPostForm';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
+  const [newPost, setNewPost] = useState(false);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -29,13 +31,16 @@ const NavBar = () => {
       console.error('no hay usuario logeado');
       return;
     }
+
     try {
-      const newPost = await addDoc(collection(db, `users/${user.id}/posts`), {
-        author: 'catalina',
-        content: 'te amo',
+      // users/${user.id}/posts
+      const newPost = await addDoc(collection(db, `posts`), {
+        author: 'prueba 1',
+        content:
+          'React es una biblioteca de JavaScript para construir interfaces de usuario. En este post, exploraré los conceptos básicos de React.',
         date: new Date(),
-        likes: '0',
-        title: 'aprendiendo a amarte',
+        likes: '10',
+        title: 'Title prueba',
       });
       console.log('Documento escrito con ID: ', newPost.id);
     } catch (e) {
@@ -60,7 +65,12 @@ const NavBar = () => {
           <li>Home</li>
           <li>Posteos</li>
           <li>Foros</li>
-          <button onClick={() => handleNewPost()}>Crear</button>
+          <button
+            // onClick={() => handleNewPost()}
+            onClick={() => setNewPost(true)}
+          >
+            Crear
+          </button>
         </ul>
         <div className="flex gap-5">
           <img src={perfil} alt="" className="h-10 rounded-full" />
@@ -72,6 +82,8 @@ const NavBar = () => {
           </button>
         </div>
       </nav>
+
+      {newPost && <NewPostForm cerrarFormulario={() => setNewPost(false)} />}
     </>
   );
 };
