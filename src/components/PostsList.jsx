@@ -143,7 +143,18 @@ const PostsList = () => {
             </div>
 
             <div>
-              
+              <input
+                type="text"
+                value={newComments[post.id] || ''}
+                onChange={(e) =>
+                  setNewComments((prevState) => ({
+                    ...prevState,
+                    [post.id]: e.target.value,
+                  }))
+                }
+                placeholder="Escribe un comentario..."
+                className="w-full p-2 rounded-md bg-zinc-800 text-white"
+              />
               <button
                 onClick={() => handleAddComment(post.id)}
                 className="bg-zinc-500 rounded-md w-fit py-2 px-4 mt-2"
