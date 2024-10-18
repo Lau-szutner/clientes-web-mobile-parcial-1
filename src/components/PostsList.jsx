@@ -5,6 +5,7 @@ import {
   addDoc,
   query,
   orderBy,
+  Timestamp, // Asegurarse de importar Timestamp
 } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
@@ -21,8 +22,6 @@ const PostsList = () => {
         id: doc.id,
         ...doc.data(),
       }));
-      {
-      }
 
       setPosts(postsArray);
 
@@ -36,9 +35,7 @@ const PostsList = () => {
         );
 
         const postComments = commentsSnapshot.docs.map((doc) => doc.data());
-        {
-          // console.log;
-        }
+
         // Actualizar el estado de comentarios con los comentarios de cada post
         setComments((prevState) => ({
           ...prevState,
@@ -58,10 +55,11 @@ const PostsList = () => {
   const handleAddComment = async (postId) => {
     if (!newComment.trim()) return; // Verifica que el comentario no esté vacío
     try {
+      console.log(postId);
       await addDoc(collection(db, `posts/${postId}/comments`), {
         user: 'lautaro',
         content: newComment,
-        createdAt: new Date().getTime,
+        createdAt: Timestamp.now(), // Usar Timestamp en lugar de Date
       });
 
       // Después de agregar el comentario, actualizar los comentarios en la UI
@@ -97,67 +95,71 @@ const PostsList = () => {
       <div className="grid p-10 gap-5 lg:w-5/12">
         {posts.map((post) => (
           <div
-  key={post.id}
-  className="bg-zinc-600 rounded-md p-5 hover:bg-zinc-700 ease-in-out duration-300 flex flex-col lg:w-6/12"
->
-  {/* Título con truncamiento y puntos suspensivos */}
-  <h2 className="text-2xl truncate">{post.title}</h2>
+            key={post.id}
+            className="bg-zinc-600 rounded-md p-5 hover:bg-zinc-700 ease-in-out duration-300 flex flex-col lg:w-6/12"
+          >
+            {/* Título con truncamiento y puntos suspensivos */}
+            <h2 className="text-2xl truncate">{post.title}</h2>
 
-  <div className="flex gap-10 my-5 items-center">
-    <p className="text-xl">{post.author}</p>
-    <p>{post.date.toDate().toLocaleString('es-ES')}</p>
-  </div>
-
-  <div className="bg-black h-20 w-20"></div>
-
-  {/* Contenido con ajuste de palabras largas */}
-  <p className="text-2xl break-words">{post.content}</p>
-
-  <div className="flex gap-5">
-    <p className="bg-zinc-500 rounded-md w-fit py-2 px-4 my-5">
-      Me gusta: {post.likes}
-    </p>
-  </div>
-
-  {/* Mostrar los comentarios */}
-  <div>
-    <h2>Comentarios:</h2>
-    <ul>
-      {comments[post.id]?.length > 0 ? (
-        comments[post.id].map((comment, index) => (
-          <li key={index} className="bg-zinc-900 p-2 rounded-md my-2">
-            <div className="flex">
-              <div className="bg-blue-500 h-10 w-10 mr-5 rounded-full"></div>
-              {comment.user} - {''}
-              {new Date(comment.createdAt.toDate()).toLocaleString('es-ES')}
+            <div className="flex gap-10 my-5 items-center">
+              <p className="text-xl">{post.author}</p>
+              {/* Aquí debes mostrar la fecha correctamente */}
+              {/* Si el post tiene una propiedad "date" que sea Timestamp, se podría formatear */}
+              {/* <p>{post.date?.toDate().toLocaleString('es-ES')}</p> */}
             </div>
-            <div className="break-words">{comment.content}</div>
-          </li>
-        ))
-      ) : (
-        <li>No hay comentarios</li>
-      )}
-    </ul>
-  </div>
 
-  {/* Formulario para agregar comentarios */}
-  <div>
-    <input
-      type="text"
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-      placeholder="Escribe un comentario..."
-      className="w-full p-2 rounded-md bg-zinc-800 text-white"
-    />
-    <button
-      onClick={() => handleAddComment(post.id)}
-      className="bg-zinc-500 rounded-md w-fit py-2 px-4 mt-2"
-    >
-      Agregar Comentario
-    </button>
-  </div>
-</div>
+            <div className="bg-black h-20 w-20"></div>
 
+            {/* Contenido con ajuste de palabras largas */}
+            <p className="text-2xl break-words">{post.content}</p>
+
+            <div className="flex gap-5">
+              <p className="bg-zinc-500 rounded-md w-fit py-2 px-4 my-5">
+                Me gusta: {post.likes}
+              </p>
+            </div>
+
+            {/* Mostrar los comentarios */}
+            <div>
+              <h2>Comentarios:</h2>
+              <ul>
+                {comments[post.id]?.length > 0 ? (
+                  comments[post.id].map((comment, index) => (
+                    <li key={index} className="bg-zinc-900 p-2 rounded-md my-2">
+                      <div className="flex">
+                        <div className="bg-blue-500 h-10 w-10 mr-5 rounded-full"></div>
+                        {comment.user} - {''}
+                        {/* Formatear la fecha correctamente */}
+                        {comment.createdAt instanceof Timestamp
+                          ? comment.createdAt.toDate().toLocaleString('es-ES')
+                          : new Date(comment.createdAt).toLocaleString('es-ES')}
+                      </div>
+                      <div className="break-words">{comment.content}</div>
+                    </li>
+                  ))
+                ) : (
+                  <li>No hay comentarios</li>
+                )}
+              </ul>
+            </div>
+
+            {/* Formulario para agregar comentarios */}
+            <div>
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Escribe un comentario..."
+                className="w-full p-2 rounded-md bg-zinc-800 text-white"
+              />
+              <button
+                onClick={() => handleAddComment(post.id)}
+                className="bg-zinc-500 rounded-md w-fit py-2 px-4 mt-2"
+              >
+                Agregar Comentario
+              </button>
+            </div>
+          </div>
         ))}
       </div>
     </div>
