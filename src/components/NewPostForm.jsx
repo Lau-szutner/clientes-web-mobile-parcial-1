@@ -1,36 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-
-import { db, auth } from '../services/firebase';
+import { db } from '../services/firebase';
 import { getAuth } from 'firebase/auth';
+
 const NewPostForm = ({ cerrarFormulario }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [author, setAuthor] = useState(''); // Estado para el autor
+
   useEffect(() => {
     const auth = getAuth(); // Obtener la instancia de autenticación
     const user = auth.currentUser; // Obtener el usuario actual
-    console.log(user.email);
+
     if (user) {
-      setAuthor(user.displayName || user.email); // Configura el autor usando el displayName o email
+      // Configura el autor usando el displayName o email
+      setAuthor(user.displayName || user.email);
     }
   }, []);
+
   const handleNewPost = async (e) => {
     e.preventDefault();
     console.log(body);
     console.log(title);
 
     try {
-      const newPost = await addDoc(
-        collection(db, 'users/BXvmdWsU9HgNllIO7eDg/posts'),
-        {
-          author: 'Lautaro',
-          content: body,
-          title: title,
-          date: new Date(),
-          likes: '10',
-        }
-      );
+      const newPost = await addDoc(collection(db, 'posts'), {
+        author: author, // Utilizar el autor dinámico desde el estado
+        content: body,
+        title: title,
+        date: new Date(),
+        likes: 10, // Puedes cambiarlo según sea necesario
+      });
+
       console.log('Documento escrito con ID: ', newPost.id);
       setTitle('');
       setBody('');
