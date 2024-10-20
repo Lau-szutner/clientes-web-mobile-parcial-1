@@ -101,9 +101,9 @@ const PostsList = () => {
   };
 
   return (
-    <div className="text-white rounded-md flex flex-col items-center">
+    <div className="text-white rounded-md flex flex-col items-center justify-center">
       <h1 className="text-3xl text-center">Lista de Posteos</h1>
-      <div className="grid p-10 gap-5 lg:w-5/12">
+      <div className="grid p-10 gap-5 lg:w-10/12">
         {posts.map((post) => (
           <div
             key={post.id}
@@ -113,7 +113,7 @@ const PostsList = () => {
             <div className="flex gap-10 my-5 items-center">
               <p className="text-xl">{post.author}</p>
             </div>
-            <p className="text-2xl break-words">{post.content}</p>
+            <p className="text-2xl break-words ">{post.content}</p>
             <div className="flex gap-5">
               <p className="bg-zinc-500 rounded-md w-fit py-2 px-4 my-5">
                 Me gusta: {post.likes}
